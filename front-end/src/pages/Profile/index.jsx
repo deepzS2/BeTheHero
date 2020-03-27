@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 
+// Authentication
+import authenticate from "../../utils/authenticate";
+
 // API
 import api from "../../services/api";
 
@@ -18,10 +21,14 @@ export default function Profile() {
 
   const history = useHistory();
 
-  const ongId = localStorage.getItem("ongId");
+  const ongId = authenticate(localStorage.getItem("ongId"));
   const ongName = localStorage.getItem("ongName");
 
   useEffect(() => {
+    if (!ongId) {
+      history.push("/");
+    }
+
     api
       .get("profile", {
         headers: {
@@ -31,13 +38,13 @@ export default function Profile() {
       .then(res => {
         setIncidents(res.data);
       });
-  }, [ongId]);
+  }, [ongId, history]);
 
   async function handleDeleteIncident(id) {
     try {
       await api.delete(`incidents/${id}`, {
         headers: {
-          Authorization: ongId
+          Authorization: ongId.id
         }
       });
 

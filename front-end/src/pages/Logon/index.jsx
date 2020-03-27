@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 
+// Authentication
+import jwt from "jsonwebtoken";
+import authConfig from "../../config/auth";
+
 // API
 import api from "../../services/api";
 
@@ -24,7 +28,11 @@ export default function Logon() {
     try {
       const res = await api.post("sessions", { id });
 
-      localStorage.setItem("ongId", id);
+      const token = jwt.sign({ id }, authConfig.secret, {
+        expiresIn: "7 days"
+      });
+
+      localStorage.setItem("ongId", `Bearer ${token}`);
       localStorage.setItem("ongName", res.data.name);
 
       history.push("/profile");

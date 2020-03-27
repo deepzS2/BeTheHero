@@ -29,3 +29,8 @@
  * * Driver: SELECT * FROM users
  * * Query Builder: table('users').select('*').where()
  */
+
+// ESLint 
+// Prettier
+// Autenticação JWT
+// Styled Components
